@@ -105,6 +105,56 @@ const UrlShortener = ({ onShorten }) => {
     await handleSubmit();
   };
 
-    return (\n    <div className=\"flex flex-col items-center justify-center space-y-6\">\n      <div className=\"text-center\">\n        <h2 className=\"text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2\">\n          Shorten Your URLs\n        </h2>\n        <p className=\"text-gray-600 text-lg\">Fast, secure, and easy URL shortening with analytics</p>\n      </div>\n      \n      <form\n        onSubmit={(e) => {\n          e.preventDefault();\n          handleSubmit();\n        }}\n        className=\"flex flex-col sm:flex-row items-center w-full max-w-3xl gap-3\"\n      >\n        <input\n          type=\"url\"\n          placeholder=\"🔗 Paste your long URL here...\"\n          value={originalUrl}\n          onChange={(e) => setOriginalUrl(e.target.value)}\n          className=\"w-full sm:flex-1 px-5 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-lg\"\n          required\n        />\n        <button\n          type=\"submit\"\n          className=\"w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap\"\n          disabled={loading}\n        >\n          {loading ? (\n            <Spinner size={10} color=\"white\" />\n          ) : (\n            <>\n              <span className=\"text-lg\">✨ Shorten Now</span>\n            </>\n          )}\n        </button>\n      </form>\n      \n      <ReCAPTCHAModal\n        isOpen={isModalOpen}\n        onClose={() => {\n          setIsModalOpen(false);\n          setRecaptchaToken(null);\n        }}\n        onVerify={handleVerify}\n        onConfirm={handleConfirm}\n      />\n    </div>\n  );\n};
+  return (
+    <div className="flex flex-col items-center justify-center space-y-6">
+      <div className="text-center">
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+          Shorten Your URLs
+        </h2>
+        <p className="text-gray-600 text-lg">Fast, secure, and easy URL shortening with analytics</p>
+      </div>
+      
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        className="flex flex-col sm:flex-row items-center w-full max-w-3xl gap-3"
+      >
+        <input
+          type="url"
+          placeholder="🔗 Paste your long URL here..."
+          value={originalUrl}
+          onChange={(e) => setOriginalUrl(e.target.value)}
+          className="w-full sm:flex-1 px-5 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-lg"
+          required
+        />
+        <button
+          type="submit"
+          className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          disabled={loading}
+        >
+          {loading ? (
+            <Spinner size={10} color="white" />
+          ) : (
+            <>
+              <span className="text-lg">✨ Shorten Now</span>
+            </>
+          )}
+        </button>
+      </form>
+      
+      <ReCAPTCHAModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setRecaptchaToken(null);
+        }}
+        onVerify={handleVerify}
+        onConfirm={handleConfirm}
+      />
+    </div>
+  );
+};
 
 export default UrlShortener;
