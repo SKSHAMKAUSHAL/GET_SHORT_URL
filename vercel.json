@@ -15,36 +15,74 @@
   ],
   "routes": [
     {
-      "src": "/auth/(.*)",
+      "src": "/api/auth/(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/shorten",
+      "src": "/api/shorten",
       "dest": "backend/server.js"
     },
     {
-      "src": "/urls",
+      "src": "/api/urls",
       "dest": "backend/server.js"
     },
     {
-      "src": "/analytics/(.*)",
+      "src": "/api/user/urls",
       "dest": "backend/server.js"
     },
     {
-      "src": "/cache/(.*)",
+      "src": "/api/user/urls/(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/([a-zA-Z0-9_-]+)",
+      "src": "/api/analytics/(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|json|woff|woff2|ttf|eot))",
+      "src": "/api/cache/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/api/([a-zA-Z0-9_-]+)/toggle-status",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/api/([a-zA-Z0-9_-]+)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/s/([a-zA-Z0-9_-]+)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "frontend/build/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|json|woff|woff2|ttf|eot|map))",
       "dest": "frontend/build/$1"
+    },
+    {
+      "src": "/(login|register|dashboard|url/.*|paused/.*)",
+      "dest": "frontend/build/index.html"
+    },
+    {
+      "src": "/",
+      "dest": "frontend/build/index.html"
     },
     {
       "src": "/(.*)",
       "dest": "frontend/build/index.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/build/index.html"
     }
   ]
 }

@@ -6,6 +6,7 @@ import UrlShortener from './UrlShortener';
 import Spinner from 'react-spinners/PulseLoader';
 import { AuthContext } from '../context/AuthContext';
 import { QRCodeCanvas } from 'qrcode.react';
+import { LogOut, Link2, BarChart3, Copy, ExternalLink, Calendar, MousePointerClick } from 'lucide-react';
 
 const Dashboard = () => {
   const [urls, setUrls] = useState([]);
@@ -42,156 +43,185 @@ const Dashboard = () => {
     navigate(`/url/${shortId}`);
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success('Copied to clipboard!');
+    }).catch(() => {
+      toast.error('Failed to copy');
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header - More Compact */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <div className="text-center sm:text-left">
-            <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-            <p className="text-gray-500 text-sm mt-1">Manage your shortened URLs</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-4 py-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <div className="flex items-center gap-3 mb-4 sm:mb-0">
+            <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-3 rounded-xl shadow-lg">
+              <Link2 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Dashboard</h1>
+              <p className="text-gray-600 text-sm">Manage your shortened URLs</p>
+            </div>
           </div>
-          <div className="flex items-center gap-3 mt-4 sm:mt-0">
-            <span className="text-sm text-gray-600 hidden sm:block">Welcome back!</span>
-            <button
-              onClick={logout}
-              className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg shadow transition duration-200 text-sm"
-            >
-              Logout
-            </button>
-          </div>
+          <button
+            onClick={logout}
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Logout</span>
+          </button>
         </div>
 
-        {/* URL Shortener - Now with side-by-side layout */}
-        <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-6">
+        {/* URL Shortener */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 mb-8 border border-gray-200">
           <UrlShortener onShorten={fetchUrls} />
         </div>
 
         {/* URLs List */}
-        <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-6 md:p-8 border border-gray-200">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-800">Your URLs</h2>
-            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+            <h2 className="text-2xl font-bold text-gray-800">Your URLs</h2>
+            <span className="text-sm text-gray-600 bg-gray-100 px-4 py-2 rounded-full font-medium">
               {urls.length} URL{urls.length !== 1 ? 's' : ''}
             </span>
           </div>
           
           {loading ? (
-            <div className="flex justify-center py-10">
-              <Spinner color="#2563eb" />
+            <div className="flex justify-center py-16">
+              <div className="text-center">
+                <Spinner color="#2563eb" size={12} />
+                <p className="text-gray-600 mt-4">Loading your URLs...</p>
+              </div>
             </div>
           ) : urls.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-gray-500">No URLs yet. Shorten one above!</p>
+            <div className="text-center py-16">
+              <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Link2 className="w-8 h-8 text-gray-400" />
+              </div>
+              <p className="text-gray-600 text-lg">No URLs yet</p>
+              <p className="text-gray-500 text-sm mt-2">Create your first shortened URL above!</p>
             </div>
           ) : (
-            <div className="max-h-[500px] overflow-y-auto">
-              {/* Column Headers */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center mb-4 p-4 border-b border-gray-300 sticky top-0 bg-white z-10">
-                <div className="lg:col-span-3">
-                  <p className="text-sm font-bold text-gray-800">Short URL</p>
-                </div>
-                <div className="lg:col-span-3">
-                  <p className="text-sm font-bold text-gray-800">Original URL</p>
-                </div>
-                <div className="lg:col-span-1">
-                  <p className="text-sm font-bold text-gray-800 text-center">QR Code</p>
-                </div>
-                <div className="lg:col-span-1">
-                  <p className="text-sm font-bold text-gray-800 text-center">Clicks</p>
-                </div>
-                <div className="lg:col-span-1">
-                  <p className="text-sm font-bold text-gray-800 text-center">Status</p>
-                </div>
-                <div className="lg:col-span-2">
-                  <p className="text-sm font-bold text-gray-800 text-center">Created Date</p>
-                </div>
-                <div className="lg:col-span-1">
-                  <p className="text-sm font-bold text-gray-800 text-center">Actions</p>
-                </div>
-              </div>
-
-              {/* URLs List with Scroll */}
-              <div className="space-y-4">
-                {urls.map((url) => {
-                  const shortUrl = `${process.env.REACT_APP_API_URL}/${url.shortId}`;
-                  return (
-                    <div key={url.shortId} className="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-                        
-                        {/* Short URL - 3 columns */}
-                        <div className="lg:col-span-3">
-                          <a
-                            href={shortUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline text-sm break-all block truncate"
-                            title={shortUrl}
-                          >
-                            {shortUrl}
-                          </a>
+            <div className="space-y-4">
+              {urls.map((url) => {
+                const shortUrl = `${window.location.origin}/s/${url.shortId}`;
+                return (
+                  <div key={url.shortId} className="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all duration-200 group">
+                    <div className="flex flex-col lg:flex-row gap-4">
+                      
+                      {/* Left: URL Info */}
+                      <div className="flex-1 space-y-3">
+                        {/* Short URL */}
+                        <div className="flex items-center gap-2">
+                          <div className="bg-blue-100 p-2 rounded-lg">
+                            <Link2 className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-gray-500 font-medium mb-1">Short URL</p>
+                            <div className="flex items-center gap-2">
+                              <a
+                                href={shortUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-700 font-medium truncate flex items-center gap-1"
+                                title={shortUrl}
+                              >
+                                {shortUrl}
+                                <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                              </a>
+                              <button
+                                onClick={() => copyToClipboard(shortUrl)}
+                                className="text-gray-400 hover:text-blue-600 transition-colors p-1"
+                                title="Copy URL"
+                              >
+                                <Copy className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Original URL - 3 columns */}
-                        <div className="lg:col-span-3">
-                          <a
-                            href={url.originalUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-green-500 hover:underline text-sm break-all block truncate"
-                            title={url.originalUrl}
-                          >
-                            {url.originalUrl}
-                          </a>
+                        {/* Original URL */}
+                        <div className="flex items-center gap-2">
+                          <div className="bg-green-100 p-2 rounded-lg">
+                            <ExternalLink className="w-4 h-4 text-green-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-gray-500 font-medium mb-1">Original URL</p>
+                            <a
+                              href={url.originalUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-600 hover:text-green-700 text-sm truncate block"
+                              title={url.originalUrl}
+                            >
+                              {url.originalUrl}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Center: Stats */}
+                      <div className="flex lg:flex-col gap-4 justify-around lg:justify-center lg:items-center lg:border-l lg:border-r lg:px-6">
+                        {/* Clicks */}
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+                            <MousePointerClick className="w-4 h-4" />
+                          </div>
+                          <p className="text-2xl font-bold text-gray-800">{url.clicks.length}</p>
+                          <p className="text-xs text-gray-500">Clicks</p>
                         </div>
 
-                        {/* QR Code - 1 column */}
-                        <div className="lg:col-span-1 flex justify-center">
+                        {/* Status */}
+                        <div className="text-center">
+                          <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                            url.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {url.active ? '✓ Active' : '⏸ Paused'}
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">Status</p>
+                        </div>
+
+                        {/* Date */}
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+                            <Calendar className="w-4 h-4" />
+                          </div>
+                          <p className="text-sm font-medium text-gray-800">
+                            {new Date(url.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </p>
+                          <p className="text-xs text-gray-500">Created</p>
+                        </div>
+                      </div>
+
+                      {/* Right: QR Code & Actions */}
+                      <div className="flex lg:flex-col items-center gap-4">
+                        {/* QR Code */}
+                        <div className="bg-white border-2 border-gray-200 rounded-xl p-2">
                           <QRCodeCanvas
                             value={shortUrl}
-                            size={40}
+                            size={60}
                             bgColor="#ffffff"
                             fgColor="#000000"
                             level="M"
                           />
                         </div>
 
-                        {/* Clicks - 1 column */}
-                        <div className="lg:col-span-1 text-center">
-                          <p className="text-gray-800 font-bold text-sm">{url.clicks.length}</p>
-                        </div>
-
-                        {/* Status - 1 column */}
-                        <div className="lg:col-span-1 text-center">
-                          <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                            url.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}>
-                            {url.active ? 'Active' : 'Inactive'}
-                          </div>
-                        </div>
-
-                        {/* Date Created - 2 columns */}
-                        <div className="lg:col-span-2 text-center">
-                          <p className="text-gray-800 text-sm">
-                            {new Date(url.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-
-                        {/* Action Button - 1 column */}
-                        <div className="lg:col-span-1 text-center">
-                          <button
-                            onClick={() => handleMoreInfo(url.shortId)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg shadow transition duration-200 text-sm"
-                          >
-                            Details
-                          </button>
-                        </div>
-
+                        {/* Details Button */}
+                        <button
+                          onClick={() => handleMoreInfo(url.shortId)}
+                          className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap"
+                        >
+                          <BarChart3 className="w-4 h-4" />
+                          <span>View Details</span>
+                        </button>
                       </div>
+
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

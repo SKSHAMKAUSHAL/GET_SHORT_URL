@@ -31,8 +31,15 @@ const limiter = RateLimit({
 });
 app.use(limiter);
 
-app.use('/auth', authRoutes);
-app.use('/', urlRoutes);
+// API Routes with /api prefix
+app.use('/api/auth', authRoutes);
+app.use('/api', urlRoutes);
+
+// Short URL redirect route (without /api prefix for direct access)
+app.get('/s/:shortId', async (req, res, next) => {
+  req.url = `/${req.params.shortId}`;
+  return urlRoutes(req, res, next);
+});
 
 // Log unhandled routes
 app.use((req, res, next) => {
