@@ -15,11 +15,31 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/auth/(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/shorten",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/urls",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/analytics/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/cache/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/([a-zA-Z0-9_-]+)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|json|woff|woff2|ttf|eot))",
       "dest": "frontend/build/$1"
     },
     {
